@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  color: #1e293b;
+  background-color: #f8fafc;
+}
+
+@layer utilities {
+  .eco-gradient {
+    background: linear-gradient(135deg, #059669 0%, #0d9488 50%, #0284c7 100%);
+  }
+  .eco-gradient-subtle {
+    background: linear-gradient(135deg, #ecfdf5 0%, #f0fdfa 50%, #f0f9ff 100%);
+  }
+}
