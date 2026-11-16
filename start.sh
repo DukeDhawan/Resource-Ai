@@ -20,8 +20,13 @@ fi
 
 # 2. Python Virtual Environment
 echo "[2/4] Setting up backend Python virtual environment..."
-if [ ! -f "backend/venv/bin/python" ]; then
-    python3 -m venv backend/venv
+if [ ! -f "backend/venv/bin/python" ] || ! backend/venv/bin/python -c "import sys" >/dev/null 2>&1; then
+    if [ -f "backend/venv/bin/python" ]; then
+        echo "Existing virtual environment is stale or invalid. Recreating it..."
+        python3 -m venv --clear backend/venv
+    else
+        python3 -m venv backend/venv
+    fi
 fi
 
 backend/venv/bin/pip install -r backend/requirements.txt --quiet

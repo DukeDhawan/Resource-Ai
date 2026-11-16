@@ -19,20 +19,31 @@ if not exist ".env" (
 
 :: 2. Setup Python virtual environment
 echo [2/4] Checking Python backend virtual environment...
+set "PYTHON_CMD="
+where py >nul 2>&1
+if !errorlevel! equ 0 (
+    set "PYTHON_CMD=py"
+) else (
+    where python >nul 2>&1
+    if !errorlevel! equ 0 set "PYTHON_CMD=python"
+)
+
+if not defined PYTHON_CMD (
+    echo [ERROR] Neither 'py' nor 'python' was found in your PATH. Please install Python 3.11+.
+    pause
+    exit /b 1
+)
+
 if not exist "backend\venv\Scripts\python.exe" (
     echo Creating virtual environment in backend\venv...
-    where py >nul 2>&1
-    if !errorlevel! equ 0 (
-        py -m venv backend\venv
-    ) else (
-        where python >nul 2>&1
-        if !errorlevel! equ 0 (
-            python -m venv backend\venv
-        ) else (
-            echo [ERROR] Neither 'py' nor 'python' was found in your PATH. Please install Python 3.11+.
-            pause
-            exit /b 1
-        )
+    %PYTHON_CMD% -m venv backend\venv
+    if errorlevel 1 exit /b 1
+) else (
+    backend\venv\Scripts\python.exe -c "import sys" >nul 2>&1
+    if errorlevel 1 (
+        echo Existing virtual environment is stale or invalid. Recreating it...
+        %PYTHON_CMD% -m venv --clear backend\venv
+        if errorlevel 1 exit /b 1
     )
 )
 
